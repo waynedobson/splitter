@@ -57,15 +57,15 @@ contract Splitter is Pausable{
     if (msg.sender == bobAddress) {
       uint value = bobBalance;
       bobBalance = 0;
-      msg.sender.transfer(value);
       emit LogWithdraw(msg.sender,value);
+      msg.sender.transfer(value);
     }
 
     if (msg.sender == carolAddress) {
       uint value = carolBalance;
       carolBalance = 0;
-      msg.sender.transfer(value);
       emit LogWithdraw(msg.sender,value);
+      msg.sender.transfer(value);
     }
   }
 
