@@ -19,12 +19,12 @@ contract Splitter is Pausable{
   event LogChangeAddress(address indexed formAddress, address indexed toAddress);
 
   modifier rejectInvalidAddresses(address _addressToChange, address _newAddress) {
-    require(msg.sender == _addressToChange);
-    require(aliceAddress != _newAddress);
-    require(bobAddress != _newAddress);
-    require(carolAddress != _newAddress);
-    require(address(0x0) != _newAddress);
-    require(address(this) != _newAddress);
+    require(msg.sender == _addressToChange, "Cannot change to same address.");
+    require(aliceAddress != _newAddress, "Cannot change to Alices address.");
+    require(bobAddress != _newAddress, "Cannot change to Bobs address.");
+    require(carolAddress != _newAddress, "Cannot change to Carols Address.");
+    require(address(0x0) != _newAddress, "Cannot change to 0x0 Address.");
+    require(address(this) != _newAddress, "Cannot change to Contract Address.");
     emit LogChangeAddress(msg.sender, _newAddress);
     _;
   }
@@ -36,14 +36,14 @@ contract Splitter is Pausable{
   }
 
   function () external payable {
-    require (msg.value > 0);
+    require (msg.value > 0, "No ETH sent to fallback function. Any that is sent will be returned");
     msg.sender.transfer(msg.value);
   }
 
   function split() public payable whenNotPaused{
-    require (msg.value.mod(2) == 0); // reject odd amounts (Alice should know better)
-    require (msg.value > 0);
-    require (msg.sender == aliceAddress);
+    require (msg.value.mod(2) == 0, "Cannot send odd value in wei"); // reject odd amounts (Alice should know better)
+    require (msg.value > 0, "No ETH was sent to split");
+    require (msg.sender == aliceAddress, "Only Alice can send");
 
     bobBalance = bobBalance.add(msg.value.div(2));
     carolBalance = carolBalance.add(msg.value.div(2));
@@ -52,7 +52,7 @@ contract Splitter is Pausable{
   }
 
   function withdraw() public whenNotPaused{
-    require(msg.sender == bobAddress || msg.sender == carolAddress);
+    require(msg.sender == bobAddress || msg.sender == carolAddress, "Only Bob or Carol can withdraw");
 
     if (msg.sender == bobAddress) {
       uint value = bobBalance;
