@@ -3,11 +3,6 @@ const Splitter = artifacts.require("./Splitter.sol");
 let splitterInstance;
 let splitterAddress;
 
-before(async () => {
-  splitterInstance = await Splitter.deployed();
-  splitterAddress = splitterInstance.address;
-});
-
 contract("Splitter features", accounts => {
   const creatorAddress = accounts[0]; // 0x09774FDeF12B16A6E75ACDA7714d418516c32847 -  used as stranger
   const aliceAddress = accounts[1]; //0x695E0E26BAe141f014921c12C92D45fF845bf32c
@@ -15,6 +10,15 @@ contract("Splitter features", accounts => {
   const carolAddress = accounts[3]; // 0xb1885953430884544Bc205A90A6e2c810d433013
   const newAddress = accounts[4]; // 0xA418e0F0CB8Aa8A907Bf975f0Ad4D15366D9a4C0 - used to test change of address
   const invalidChecksumAddress = "0x31fC3D52f842E70deA4F990e4CfcAFa4045C991C"; //Invalid Address with capital C (should be lower case)
+
+  beforeEach(() => {
+    Splitter.new(aliceAddress, bobAddress, carolAddress);
+  });
+
+  before(async () => {
+    splitterInstance = await Splitter.deployed();
+    splitterAddress = splitterInstance.address;
+  });
 
   it("...contract has an initial zero ETH balance", async () => {
     const balance = await web3.eth.getBalance(splitterInstance.address);
