@@ -2,18 +2,25 @@ const Splitter = artifacts.require("./Splitter.sol");
 
 let splitterInstance;
 
-const creatorAddress = "0x09774FDeF12B16A6E75ACDA7714d418516c32847"; // used as stranger
-const aliceAddress = "0x695E0E26BAe141f014921c12C92D45fF845bf32c";
-const bobAddress = "0xE75e73F417930F23eAd63180A05E132aF97b39e5";
-const carolAddress = "0xb1885953430884544Bc205A90A6e2c810d433013";
-const newAddress = "0xA418e0F0CB8Aa8A907Bf975f0Ad4D15366D9a4C0"; // used to test change of address
-const invalidChecksumAddress = "0x31fC3D52f842E70deA4F990e4CfcAFa4045C991C"; //newAddress with capital C
+// var creatorAddress = accounts[0]; //"0x09774FDeF12B16A6E75ACDA7714d418516c32847"; // used as stranger
+// const aliceAddress = "0x695E0E26BAe141f014921c12C92D45fF845bf32c";
+// const bobAddress = "0xE75e73F417930F23eAd63180A05E132aF97b39e5";
+// const carolAddress = "0xb1885953430884544Bc205A90A6e2c810d433013";
+// const newAddress = "0xA418e0F0CB8Aa8A907Bf975f0Ad4D15366D9a4C0"; // used to test change of address
+// const invalidChecksumAddress = "0x31fC3D52f842E70deA4F990e4CfcAFa4045C991C"; //newAddress with capital C
 
 before(async () => {
   splitterInstance = await Splitter.deployed();
 });
 
 contract("Splitter features for Alice", accounts => {
+  const creatorAddress = accounts[0]; // 0x09774FDeF12B16A6E75ACDA7714d418516c32847 -  used as stranger
+  const aliceAddress = accounts[1]; //0x695E0E26BAe141f014921c12C92D45fF845bf32c
+  const bobAddress = accounts[2]; // 0xE75e73F417930F23eAd63180A05E132aF97b39e5
+  const carolAddress = accounts[3]; // 0xb1885953430884544Bc205A90A6e2c810d433013
+  const newAddress = accounts[4]; // 0xA418e0F0CB8Aa8A907Bf975f0Ad4D15366D9a4C0 - used to test change of address
+  const invalidChecksumAddress = "0x31fC3D52f842E70deA4F990e4CfcAFa4045C991C"; //Invalid Address with capital C (should be lower case)
+
   it("...has inital address address as " + aliceAddress, async () => {
     const pulledAddress = await splitterInstance.aliceAddress();
     assert.equal(pulledAddress, aliceAddress, "Invalid iniital address");
