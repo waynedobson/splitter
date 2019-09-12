@@ -35,11 +35,10 @@ contract Splitter is Pausable{
     carolAddress = _carolAddress;
   }
 
-  function () external payable {
-    require (msg.value > 0, "No ETH sent to fallback function. Any that is sent will be returned");
-    msg.sender.transfer(msg.value);
+  function () external {
+    revert("No fallback function");
   }
-
+  
   function split() public payable whenNotPaused{
     require (msg.value.mod(2) == 0, "Cannot send odd value in wei"); // reject odd amounts (Alice should know better)
     require (msg.value > 0, "No ETH was sent to split");

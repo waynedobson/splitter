@@ -26,18 +26,18 @@ contract("Splitter features", accounts => {
     assert.equal(balance, 0, "Contract had a balance of ETH before send");
   });
 
-  it("...returns ETH sent to contract", async () => {
-    const balance = await web3.eth.getBalance(splitterInstance.address);
+  it("...has not fallbackfunction", async () => {
+    try {
+      await web3.eth.sendTransaction({
+        from: aliceAddress,
+        to: splitterAddress,
+        value: "1000000000000000000"
+      });
 
-    await web3.eth.sendTransaction({
-      from: aliceAddress,
-      to: splitterAddress,
-      value: "1000000000000000000"
-    });
-
-    const newbalance = await web3.eth.getBalance(splitterInstance.address);
-
-    assert.equal(newbalance, 0, "Contract had a balance of ETH before send");
+      assert.fail("Allowed fallback call");
+    } catch (err) {
+      assert.include(err.message, "revert", "");
+    }
   });
 
   it("...rejects odd amounts to split", async () => {
