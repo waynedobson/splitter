@@ -10,12 +10,12 @@ contract("Splitter features for Bob", accounts => {
   const newAddress = accounts[4]; // 0xA418e0F0CB8Aa8A907Bf975f0Ad4D15366D9a4C0 - used to test change of address
   const invalidChecksumAddress = "0x31fC3D52f842E70deA4F990e4CfcAFa4045C991C"; //Invalid Address with capital C (should be lower case)
 
-  beforeEach(() => {
-    Splitter.new(aliceAddress, bobAddress, carolAddress);
-  });
-
-  before(async () => {
-    splitterInstance = await Splitter.deployed();
+  beforeEach(async () => {
+    splitterInstance = await Splitter.new(
+      aliceAddress,
+      bobAddress,
+      carolAddress
+    );
   });
 
   it("...has inital address address as " + bobAddress, async () => {

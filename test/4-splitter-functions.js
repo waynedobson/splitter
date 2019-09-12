@@ -11,12 +11,12 @@ contract("Splitter features", accounts => {
   const newAddress = accounts[4]; // 0xA418e0F0CB8Aa8A907Bf975f0Ad4D15366D9a4C0 - used to test change of address
   const invalidChecksumAddress = "0x31fC3D52f842E70deA4F990e4CfcAFa4045C991C"; //Invalid Address with capital C (should be lower case)
 
-  beforeEach(() => {
-    Splitter.new(aliceAddress, bobAddress, carolAddress);
-  });
-
-  before(async () => {
-    splitterInstance = await Splitter.deployed();
+  beforeEach(async () => {
+    splitterInstance = await Splitter.new(
+      aliceAddress,
+      bobAddress,
+      carolAddress
+    );
     splitterAddress = splitterInstance.address;
   });
 
@@ -40,17 +40,20 @@ contract("Splitter features", accounts => {
     }
   });
 
-  it("...rejects odd amounts to split", async () => {
-    try {
-      await splitterInstance.split({
-        from: aliceAddress,
-        value: 1
-      });
+  it("...gives odd amounts to Alice", async () => {
+    const startBalance = await splitterInstance.aliceBalance();
 
-      assert.fail("Odd value accepted");
-    } catch (err) {
-      assert.include(err.message, "revert", "");
-    }
+    await splitterInstance.split({
+      from: aliceAddress,
+      value: 3
+    });
+
+    const endBalance = await splitterInstance.aliceBalance();
+
+    assert(
+      startBalance.add(new web3.utils.BN(1)).eq(endBalance),
+      "Alice not given the odd amount"
+    );
   });
 
   it("...splits between Bob and Carol", async () => {
@@ -93,10 +96,10 @@ contract("Splitter features", accounts => {
     }
   });
 
-  it("...only allows Bob or Carol to withdraw", async () => {
+  it("...only allows Alice, Bob or Carol to withdraw", async () => {
     try {
       await splitterInstance.withdraw({
-        from: aliceAddress
+        from: creatorAddress
       });
 
       assert.fail("Did not reject none Bob/Carol address in withdraw");

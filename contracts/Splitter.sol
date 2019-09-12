@@ -11,6 +11,7 @@ contract Splitter is Pausable{
   address public carolAddress;
 
 //consider using mapping if more than 2
+  uint public aliceBalance;
   uint public bobBalance;
   uint public carolBalance;
 
@@ -38,20 +39,27 @@ contract Splitter is Pausable{
   function () external {
     revert("No fallback function");
   }
-  
+
   function split() public payable whenNotPaused{
-    require (msg.value.mod(2) == 0, "Cannot send odd value in wei"); // reject odd amounts (Alice should know better)
     require (msg.value > 0, "No ETH was sent to split");
     require (msg.sender == aliceAddress, "Only Alice can send");
 
     bobBalance = bobBalance.add(msg.value.div(2));
     carolBalance = carolBalance.add(msg.value.div(2));
+    aliceBalance = aliceBalance.add(msg.value.mod(2));
 
     emit LogSplit(msg.sender, msg.value);
   }
 
   function withdraw() public whenNotPaused{
-    require(msg.sender == bobAddress || msg.sender == carolAddress, "Only Bob or Carol can withdraw");
+    require(msg.sender == aliceAddress || msg.sender == bobAddress || msg.sender == carolAddress, "Only Alice, Bob or Carol can withdraw");
+
+    if (msg.sender == aliceAddress) {
+      uint value = aliceBalance;
+      aliceBalance = 0;
+      emit LogWithdraw(msg.sender,value);
+      msg.sender.transfer(value);
+    }
 
     if (msg.sender == bobAddress) {
       uint value = bobBalance;
