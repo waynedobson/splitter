@@ -35,7 +35,7 @@ contract("Splitter features", accounts => {
       await web3.eth.sendTransaction({
         from: aliceAddress,
         to: splitterAddress,
-        value: "1000000000000000000"
+        value: web3.utils.toWei("0.1", "ether")
       });
 
       assert.fail("Allowed fallback call");
@@ -119,7 +119,7 @@ contract("Splitter features", accounts => {
     });
   });
 
-  it("...allows Bob to withdraw 5 ETH (Allowing for Gas)", async () => {
+  it("...allows Bob to withdraw 0.05 ETH (Allowing for Gas)", async () => {
     const bobStartBalance = await splitterInstance.bobBalance();
     const bobETHStartBalance = new web3.utils.BN(
       await web3.eth.getBalance(bobAddress)
@@ -127,7 +127,7 @@ contract("Splitter features", accounts => {
 
     await splitterInstance.split({
       from: aliceAddress,
-      value: "10000000000000000000"
+      value: web3.utils.toWei("0.1", "ether")
     });
 
     const bobMidBalance = await splitterInstance.bobBalance();
@@ -151,7 +151,7 @@ contract("Splitter features", accounts => {
     assert(allowedGas.lt(gasUsed), "Bob did not get enough ETH form the 5 ETH");
   });
 
-  it("...allows Carol to withdraw 5 ETH (Allowing for Gas)", async () => {
+  it("...allows Carol to withdraw 0.05 ETH (Allowing for Gas)", async () => {
     const carolStartBalance = await splitterInstance.carolBalance();
     const carolETHStartBalance = new web3.utils.BN(
       await web3.eth.getBalance(carolAddress)
@@ -159,7 +159,7 @@ contract("Splitter features", accounts => {
 
     await splitterInstance.split({
       from: aliceAddress,
-      value: "10000000000000000000"
+      value: web3.utils.toWei("0.1", "ether")
     });
 
     const carolMidBalance = await splitterInstance.carolBalance();
@@ -182,12 +182,12 @@ contract("Splitter features", accounts => {
 
     assert(
       allowedGas.lt(gasUsed),
-      "carol did not get enough ETH form the 5 ETH"
+      "carol did not get enough ETH form the 0.05 ETH"
     );
     assert(carolEndBalance.isZero, "carol still had balance on splitter");
   });
 
-  it("...allows Bob to withdraw 5 ETH and then checks that 0 is left", async () => {
+  it("...allows Bob to withdraw 0.05 ETH and then checks that 0 is left", async () => {
     const bobStartBalance = await splitterInstance.bobBalance();
     const bobETHStartBalance = new web3.utils.BN(
       await web3.eth.getBalance(bobAddress)
@@ -195,7 +195,7 @@ contract("Splitter features", accounts => {
 
     await splitterInstance.split({
       from: aliceAddress,
-      value: "10000000000000000000"
+      value: web3.utils.toWei("0.1", "ether")
     });
 
     const bobMidBalance = await splitterInstance.bobBalance();
@@ -212,7 +212,7 @@ contract("Splitter features", accounts => {
     assert(bobEndBalance.isZero, "Bob still had balance on splitter");
   });
 
-  it("...allows Carol to withdraw 5 ETH and then checks that 0 is left", async () => {
+  it("...allows Carol to withdraw 0.05 ETH and then checks that 0 is left", async () => {
     const carolStartBalance = await splitterInstance.carolBalance();
     const carolETHStartBalance = new web3.utils.BN(
       await web3.eth.getBalance(carolAddress)
@@ -220,7 +220,7 @@ contract("Splitter features", accounts => {
 
     await splitterInstance.split({
       from: aliceAddress,
-      value: "10000000000000000000"
+      value: web3.utils.toWei("0.1", "ether")
     });
 
     const carolMidBalance = await splitterInstance.carolBalance();
