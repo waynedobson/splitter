@@ -23,7 +23,11 @@ contract("Splitter features", accounts => {
   it("...contract has an initial zero ETH balance", async () => {
     const balance = await web3.eth.getBalance(splitterInstance.address);
 
-    assert.equal(balance, 0, "Contract had a balance of ETH before send");
+    assert.strictEqual(
+      balance,
+      "0",
+      "Contract had a balance of ETH before send"
+    );
   });
 
   it("...has not fallbackfunction", async () => {

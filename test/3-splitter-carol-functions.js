@@ -20,7 +20,7 @@ contract("Splitter features for Carol", accounts => {
 
   it("...has inital address address as " + carolAddress, async () => {
     const pulledAddress = await splitterInstance.carolAddress();
-    assert.equal(pulledAddress, carolAddress, "Invalid iniital address");
+    assert.strictEqual(pulledAddress, carolAddress, "Invalid iniital address");
   });
 
   it("...prevent stranger from changing address", async () => {
@@ -123,6 +123,10 @@ contract("Splitter features for Carol", accounts => {
 
     const pulledCarolAddress = await splitterInstance.carolAddress();
 
-    assert.equal(pulledCarolAddress, newAddress, "Address was not changed");
+    assert.strictEqual(
+      pulledCarolAddress,
+      newAddress,
+      "Address was not changed"
+    );
   });
 });

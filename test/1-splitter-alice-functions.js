@@ -20,7 +20,7 @@ contract("Splitter features for Alice", accounts => {
 
   it("...has inital address address as " + aliceAddress, async () => {
     const pulledAddress = await splitterInstance.aliceAddress();
-    assert.equal(pulledAddress, aliceAddress, "Invalid iniital address");
+    assert.strictEqual(pulledAddress, aliceAddress, "Invalid iniital address");
   });
 
   it("...prevent stranger from changing address", async () => {
@@ -123,6 +123,10 @@ contract("Splitter features for Alice", accounts => {
 
     const pulledAliceAddress = await splitterInstance.aliceAddress();
 
-    assert.equal(pulledAliceAddress, newAddress, "Address was not changed");
+    assert.strictEqual(
+      pulledAliceAddress,
+      newAddress,
+      "Address was not changed"
+    );
   });
 });
