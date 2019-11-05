@@ -62,6 +62,7 @@ contract Splitter is Pausable{
       aliceBalance = 0;
       emit LogWithdraw(msg.sender,value);
       msg.sender.transfer(value);
+      return;
     }
 
     if (msg.sender == bobAddress) {
@@ -69,6 +70,7 @@ contract Splitter is Pausable{
       bobBalance = 0;
       emit LogWithdraw(msg.sender,value);
       msg.sender.transfer(value);
+      return;
     }
 
     if (msg.sender == carolAddress) {
@@ -76,6 +78,7 @@ contract Splitter is Pausable{
       carolBalance = 0;
       emit LogWithdraw(msg.sender,value);
       msg.sender.transfer(value);
+      return;
     }
   }
 
