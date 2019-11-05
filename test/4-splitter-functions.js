@@ -69,9 +69,8 @@ contract("Splitter features", accounts => {
     const bobBalance = await splitterInstance.bobBalance();
     const carolBalance = await splitterInstance.carolBalance();
 
-    if (bobBalance != 5 || carolBalance != 5) {
-      assert.fail("amount was not allocated correctly");
-    }
+    assert.notEqual(bobBalance, new web3.utils.BN(5));
+    assert.notEqual(carolBalance, new web3.utils.BN(5));
   });
 
   it("...rejects zero send from Alice", async () => {
