@@ -31,6 +31,9 @@ contract Splitter is Pausable{
   }
 
   constructor (address _aliceAddress, address _bobAddress, address _carolAddress) public {
+    require(address(0x0) != _aliceAddress, "Alice address cannot be set to 0x0.");
+    require(address(0x0) != _bobAddress, "Bob address cannot be set to 0x0.");
+    require(address(0x0) != _carolAddress, "Carol address cannot be set to 0x0.");
     aliceAddress = _aliceAddress;
     bobAddress = _bobAddress;
     carolAddress = _carolAddress;

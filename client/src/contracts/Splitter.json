@@ -9686,11 +9686,11 @@
       },
       "links": {},
       "address": "0x35463C1B6846B96190B8d7738899407fE2e1c7e3",
-      "transactionHash": "0x16d3a826ccadf8b5e52e7b5465a363c41646bc6cf7ccc9baaf0eb93fb515a982"
+      "transactionHash": "0x339a4877b91800afb5429465a25b359d8269fae7198b0e81cba785789241518d"
     }
   },
   "schemaVersion": "3.0.10",
-  "updatedAt": "2019-09-12T05:28:46.504Z",
+  "updatedAt": "2019-10-23T04:27:45.169Z",
   "devdoc": {
     "methods": {
       "pause()": {
