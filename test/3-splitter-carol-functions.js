@@ -3,6 +3,8 @@ const Splitter = artifacts.require("./Splitter.sol");
 let splitterInstance;
 
 contract("Splitter features for Carol", accounts => {
+  let splitterInstance;
+
   const creatorAddress = accounts[0]; // 0x09774FDeF12B16A6E75ACDA7714d418516c32847 -  used as stranger
   const aliceAddress = accounts[1]; //0x695E0E26BAe141f014921c12C92D45fF845bf32c
   const bobAddress = accounts[2]; // 0xE75e73F417930F23eAd63180A05E132aF97b39e5
