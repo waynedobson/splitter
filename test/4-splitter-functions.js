@@ -149,7 +149,6 @@ contract("Splitter features", accounts => {
     const allowedGas = new web3.utils.BN("50000000000000"); // if used more than this something is wrong
 
     assert(allowedGas.lt(gasUsed), "Bob did not get enough ETH form the 5 ETH");
-    assert(bobEndBalance.isZero, "Bob still had balance on splitter");
   });
 
   it("...allows Carol to withdraw 5 ETH (Allowing for Gas)", async () => {
@@ -185,6 +184,56 @@ contract("Splitter features", accounts => {
       allowedGas.lt(gasUsed),
       "carol did not get enough ETH form the 5 ETH"
     );
+    assert(carolEndBalance.isZero, "carol still had balance on splitter");
+  });
+
+  it("...allows Bob to withdraw 5 ETH and then checks that 0 is left", async () => {
+    const bobStartBalance = await splitterInstance.bobBalance();
+    const bobETHStartBalance = new web3.utils.BN(
+      await web3.eth.getBalance(bobAddress)
+    );
+
+    await splitterInstance.split({
+      from: aliceAddress,
+      value: "10000000000000000000"
+    });
+
+    const bobMidBalance = await splitterInstance.bobBalance();
+    const bobETHMidbalance = new web3.utils.BN(
+      await web3.eth.getBalance(bobAddress)
+    );
+
+    await splitterInstance.withdraw({
+      from: bobAddress
+    });
+
+    const bobEndBalance = await splitterInstance.bobBalance();
+
+    assert(bobEndBalance.isZero, "Bob still had balance on splitter");
+  });
+
+  it("...allows Carol to withdraw 5 ETH and then checks that 0 is left", async () => {
+    const carolStartBalance = await splitterInstance.carolBalance();
+    const carolETHStartBalance = new web3.utils.BN(
+      await web3.eth.getBalance(carolAddress)
+    );
+
+    await splitterInstance.split({
+      from: aliceAddress,
+      value: "10000000000000000000"
+    });
+
+    const carolMidBalance = await splitterInstance.carolBalance();
+    const carolETHMidbalance = new web3.utils.BN(
+      await web3.eth.getBalance(carolAddress)
+    );
+
+    await splitterInstance.withdraw({
+      from: carolAddress
+    });
+
+    const carolEndBalance = await splitterInstance.carolBalance();
+
     assert(carolEndBalance.isZero, "carol still had balance on splitter");
   });
 });
