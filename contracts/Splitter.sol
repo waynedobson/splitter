@@ -62,18 +62,16 @@ contract Splitter is Pausable{
       aliceBalance = 0;
       emit LogWithdraw(msg.sender,value);
       msg.sender.transfer(value);
-    } else { if (msg.sender == bobAddress) {
-        uint value = bobBalance;
-        bobBalance = 0;
-        emit LogWithdraw(msg.sender,value);
-        msg.sender.transfer(value);
-        } else { if (msg.sender == carolAddress) {
-          uint value = carolBalance;
-          carolBalance = 0;
-          emit LogWithdraw(msg.sender,value);
-          msg.sender.transfer(value);
-        }
-      }
+    } else if (msg.sender == bobAddress) {
+      uint value = bobBalance;
+      bobBalance = 0;
+      emit LogWithdraw(msg.sender,value);
+      msg.sender.transfer(value);
+    } else if (msg.sender == carolAddress) {
+      uint value = carolBalance;
+      carolBalance = 0;
+      emit LogWithdraw(msg.sender,value);
+      msg.sender.transfer(value);
     }
   }
 
