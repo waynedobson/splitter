@@ -120,8 +120,7 @@ contract("Splitter features", accounts => {
   });
 
   it("...allows Bob to withdraw 0.05 ETH (Allowing for Gas)", async () => {
-    const bobStartBalance = await splitterInstance.bobBalance();
-    const bobETHStartBalance = new web3.utils.BN(
+    const startBalance = new web3.utils.BN(
       await web3.eth.getBalance(bobAddress)
     );
 
@@ -130,30 +129,31 @@ contract("Splitter features", accounts => {
       value: web3.utils.toWei("0.1", "ether")
     });
 
-    const bobMidBalance = await splitterInstance.bobBalance();
-    const bobETHMidbalance = new web3.utils.BN(
-      await web3.eth.getBalance(bobAddress)
-    );
-
-    await splitterInstance.withdraw({
+    let trans = await splitterInstance.withdraw({
       from: bobAddress
     });
 
-    const bobEndBalance = await splitterInstance.bobBalance();
-    const bobETHEndBalance = new web3.utils.BN(
-      await web3.eth.getBalance(bobAddress)
+    const gasUsed = new web3.utils.BN(trans.receipt.gasUsed);
+    const gasPrice = new web3.utils.BN(await web3.eth.getGasPrice());
+    const allowedGas = new web3.utils.BN(gasPrice).mul(gasUsed);
+
+    const endBalance = new web3.utils.BN(await web3.eth.getBalance(bobAddress));
+    const amountRec = endBalance.sub(startBalance);
+
+    const amountCombined = web3.utils.toHex(amountRec.add(allowedGas));
+    const amountRequesredCombined = web3.utils.toHex(
+      web3.utils.toWei("0.05", "ether")
     );
 
-    const bobDiffETH = bobETHEndBalance.sub(bobETHStartBalance);
-    const gasUsed = bobMidBalance.sub(bobDiffETH);
-    const allowedGas = new web3.utils.BN("50000000000000"); // if used more than this something is wrong
-
-    assert(allowedGas.lt(gasUsed), "Bob did not get enough ETH form the 5 ETH");
+    assert.strictEqual(
+      amountCombined,
+      amountRequesredCombined,
+      "Bob did not get enough ETH form the 0.05 ETH"
+    );
   });
 
   it("...allows Carol to withdraw 0.05 ETH (Allowing for Gas)", async () => {
-    const carolStartBalance = await splitterInstance.carolBalance();
-    const carolETHStartBalance = new web3.utils.BN(
+    const startBalance = new web3.utils.BN(
       await web3.eth.getBalance(carolAddress)
     );
 
@@ -162,29 +162,29 @@ contract("Splitter features", accounts => {
       value: web3.utils.toWei("0.1", "ether")
     });
 
-    const carolMidBalance = await splitterInstance.carolBalance();
-    const carolETHMidbalance = new web3.utils.BN(
-      await web3.eth.getBalance(carolAddress)
-    );
-
-    await splitterInstance.withdraw({
+    let trans = await splitterInstance.withdraw({
       from: carolAddress
     });
 
-    const carolEndBalance = await splitterInstance.carolBalance();
-    const carolETHEndBalance = new web3.utils.BN(
+    const gasUsed = new web3.utils.BN(trans.receipt.gasUsed);
+    const gasPrice = new web3.utils.BN(await web3.eth.getGasPrice());
+    const allowedGas = new web3.utils.BN(gasPrice).mul(gasUsed);
+
+    const endBalance = new web3.utils.BN(
       await web3.eth.getBalance(carolAddress)
     );
+    const amountRec = endBalance.sub(startBalance);
 
-    const carolDiffETH = carolETHEndBalance.sub(carolETHStartBalance);
-    const gasUsed = carolMidBalance.sub(carolDiffETH);
-    const allowedGas = new web3.utils.BN("50000000000000"); // if used more than this something is wrong
-
-    assert(
-      allowedGas.lt(gasUsed),
-      "carol did not get enough ETH form the 0.05 ETH"
+    const amountCombined = web3.utils.toHex(amountRec.add(allowedGas));
+    const amountRequesredCombined = web3.utils.toHex(
+      web3.utils.toWei("0.05", "ether")
     );
-    assert(carolEndBalance.isZero, "carol still had balance on splitter");
+
+    assert.strictEqual(
+      amountCombined,
+      amountRequesredCombined,
+      "Carol did not get enough ETH form the 0.05 ETH"
+    );
   });
 
   it("...allows Bob to withdraw 0.05 ETH and then checks that 0 is left", async () => {
