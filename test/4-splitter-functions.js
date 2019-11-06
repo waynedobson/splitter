@@ -236,4 +236,46 @@ contract("Splitter features", accounts => {
 
     assert(carolEndBalance.isZero, "carol still had balance on splitter");
   });
+
+  it("...emits LogSplit event", async () => {
+    txObj = await splitterInstance.split({
+      from: aliceAddress,
+      value: web3.utils.toWei("0.1", "ether")
+    });
+
+    assert.strictEqual(
+      txObj.receipt.logs[0].event,
+      "LogSplit",
+      "LogSplit not emitted"
+    );
+  });
+
+  it("...emits LogWithdraw event", async () => {
+    await splitterInstance.split({
+      from: aliceAddress,
+      value: web3.utils.toWei("0.1", "ether")
+    });
+
+    txObj = await splitterInstance.withdraw({
+      from: carolAddress
+    });
+
+    assert.strictEqual(
+      txObj.receipt.logs[0].event,
+      "LogWithdraw",
+      "LogWithdraw not emitted"
+    );
+  });
+
+  it("...emits LogChangeAddress event", async () => {
+    txObj = await splitterInstance.changeBobAddress(newAddress, {
+      from: bobAddress
+    });
+
+    assert.strictEqual(
+      txObj.receipt.logs[0].event,
+      "LogChangeAddress",
+      "LogChangeAddress not emitted"
+    );
+  });
 });
