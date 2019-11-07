@@ -138,7 +138,7 @@ contract("Splitter features", accounts => {
     });
 
     const tx = await web3.eth.getTransaction(txobj.tx);
-    const gasPrice = web3.utils.toBN(tx.gasPrice);
+    const gasPrice = new BN(tx.gasPrice);
 
     const gasUsed = new BN(txobj.receipt.gasUsed);
     const allowedGas = gasPrice.mul(gasUsed);
