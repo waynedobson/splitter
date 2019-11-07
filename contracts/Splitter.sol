@@ -57,7 +57,7 @@ contract Splitter is Pausable{
   function withdraw() public whenNotPaused{
 
     address _aliceAddress = aliceAddress; //memory variable as declared in function
-    address _bobAddress = bobAddress;   //memory variable as declared in function
+    address _bobAddress = bobAddress;     //memory variable as declared in function
     address _carolAddress = carolAddress; //memory variable as declared in function
 
     require(msg.sender == _aliceAddress || msg.sender == _bobAddress || msg.sender == _carolAddress, "Only Alice, Bob or Carol can withdraw");

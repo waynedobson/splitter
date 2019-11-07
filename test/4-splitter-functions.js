@@ -20,7 +20,8 @@ contract("Splitter features", accounts => {
     splitterInstance = await Splitter.new(
       aliceAddress,
       bobAddress,
-      carolAddress
+      carolAddress,
+      { from: creatorAddress }
     );
     splitterAddress = splitterInstance.address;
   });

@@ -10,7 +10,9 @@ contract("Splitter constructor", accounts => {
 
   it("...rejects 0x00 addresses for Alice", async () => {
     try {
-      await Splitter.new(zeroAddress, bobAddress, carolAddress);
+      await Splitter.new(zeroAddress, bobAddress, carolAddress, {
+        from: creatorAddress
+      });
 
       assert.fail("0x00 allowed as Alice addrss");
     } catch (err) {
@@ -20,7 +22,9 @@ contract("Splitter constructor", accounts => {
 
   it("...rejects 0x00 addresses for Bob", async () => {
     try {
-      await Splitter.new(aliceAddress, zeroAddress, carolAddress);
+      await Splitter.new(aliceAddress, zeroAddress, carolAddress, {
+        from: creatorAddress
+      });
 
       assert.fail("0x00 allowed as Alice addrss");
     } catch (err) {
@@ -30,7 +34,9 @@ contract("Splitter constructor", accounts => {
 
   it("...rejects 0x00 addresses for Carol", async () => {
     try {
-      await Splitter.new(aliceAddress, zeroAddress, carolAddress);
+      await Splitter.new(aliceAddress, zeroAddress, carolAddress, {
+        from: creatorAddress
+      });
 
       assert.fail("0x00 allowed as Alice addrss");
     } catch (err) {

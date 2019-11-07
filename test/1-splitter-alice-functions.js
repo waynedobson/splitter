@@ -14,10 +14,13 @@ contract("Splitter features for Alice", accounts => {
   ] = accounts;
 
   beforeEach("create instance", async () => {
+    // return Splitter.new({ from: owner, gas: MAX_GAS });
+
     splitterInstance = await Splitter.new(
       aliceAddress,
       bobAddress,
-      carolAddress
+      carolAddress,
+      { from: creatorAddress }
     );
   });
 
