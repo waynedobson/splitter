@@ -141,16 +141,13 @@ contract("Splitter features", accounts => {
     const allowedGas = new web3.utils.BN(gasPrice).mul(gasUsed);
 
     const endBalance = new web3.utils.BN(await web3.eth.getBalance(bobAddress));
-    const amountRec = endBalance.sub(startBalance);
-
-    const amountCombined = web3.utils.toHex(amountRec.add(allowedGas));
-    const amountRequesredCombined = web3.utils.toHex(
-      web3.utils.toWei("0.05", "ether")
-    );
 
     assert.strictEqual(
-      amountCombined,
-      amountRequesredCombined,
+      endBalance.toString(10),
+      startBalance
+        .add(new web3.utils.BN(web3.utils.toWei("0.05", "ether")))
+        .sub(allowedGas)
+        .toString(10),
       "Bob did not get enough ETH form the 0.05 ETH"
     );
   });
@@ -176,16 +173,13 @@ contract("Splitter features", accounts => {
     const endBalance = new web3.utils.BN(
       await web3.eth.getBalance(carolAddress)
     );
-    const amountRec = endBalance.sub(startBalance);
-
-    const amountCombined = web3.utils.toHex(amountRec.add(allowedGas));
-    const amountRequesredCombined = web3.utils.toHex(
-      web3.utils.toWei("0.05", "ether")
-    );
 
     assert.strictEqual(
-      amountCombined,
-      amountRequesredCombined,
+      endBalance.toString(10),
+      startBalance
+        .add(new web3.utils.BN(web3.utils.toWei("0.05", "ether")))
+        .sub(allowedGas)
+        .toString(10),
       "Carol did not get enough ETH form the 0.05 ETH"
     );
   });
