@@ -248,6 +248,21 @@ contract("Splitter features", accounts => {
       from: carolAddress
     });
 
+    console.log(txObj.receipt.logs[0].args[0]);
+    console.log(txObj.receipt.logs[0].args[1].toString());
+
+    assert.strictEqual(
+      txObj.receipt.logs[0].args[0],
+      carolAddress,
+      "LogWithdraw not emitted with correct address"
+    );
+
+    assert.strictEqual(
+      txObj.receipt.logs[0].args[1].toString(),
+      toWei("0.05", "ether").toString(),
+      "LogWithdraw not emitted with correct withdrawal amount"
+    );
+
     assert.strictEqual(
       txObj.receipt.logs[0].event,
       "LogWithdraw",
