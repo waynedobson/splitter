@@ -10,7 +10,7 @@ contract("Splitter features", accounts => {
 
   const { BN, toWei } = web3.utils;
 
-  beforeEach("create instance", async () => {
+  beforeEach("create instance", async function() {
     splitterInstance = await Splitter.new({ from: creator });
     splitterAddress = splitterInstance.address;
   });
@@ -25,7 +25,7 @@ contract("Splitter features", accounts => {
     );
   });
 
-  it("...has no fallbackfunction", async () => {
+  it("...has no fallbackfunction", async function() {
     try {
       await web3.eth.sendTransaction({
         from: sender,
@@ -39,7 +39,7 @@ contract("Splitter features", accounts => {
     }
   });
 
-  it("...gives odd amounts to sender", async () => {
+  it("...gives odd amounts to sender", async function() {
     const startBalance = await splitterInstance.accounts(sender);
 
     await splitterInstance.split(receiver1, receiver2, {
@@ -55,7 +55,7 @@ contract("Splitter features", accounts => {
     );
   });
 
-  it("...splits between receiver1 and receiver2", async () => {
+  it("...splits between receiver1 and receiver2", async function() {
     await splitterInstance.split(receiver1, receiver2, {
       from: sender,
       value: 10
@@ -68,7 +68,7 @@ contract("Splitter features", accounts => {
     assert.notEqual(receiver2Balance, new BN(5));
   });
 
-  it("...rejects zero send from sender", async () => {
+  it("...rejects zero send from sender", async function() {
     try {
       await splitterInstance.split(receiver1, receiver2, {
         from: sender,
@@ -83,7 +83,7 @@ contract("Splitter features", accounts => {
 
   // event LogSplit(address indexed senderAddress, uint value, address receiver1, address receiver2);
 
-  it("...emits LogSplit event", async () => {
+  it("...emits LogSplit event", async function() {
     const txObj = await splitterInstance.split(receiver1, receiver2, {
       from: sender,
       value: toWei("0.1", "ether")
@@ -120,7 +120,7 @@ contract("Splitter features", accounts => {
     );
   });
 
-  it("...allows receiver to withdraw 0.05 ETH (Allowing for Gas)", async () => {
+  it("...allows receiver to withdraw 0.05 ETH (Allowing for Gas)", async function() {
     const startBalance = new BN(await web3.eth.getBalance(receiver1));
 
     await splitterInstance.split(receiver1, receiver2, {
@@ -151,7 +151,7 @@ contract("Splitter features", accounts => {
     );
   });
 
-  it("...allows receiver to withdraw 0.05 ETH and then checks that 0 is left", async () => {
+  it("...allows receiver to withdraw 0.05 ETH and then checks that 0 is left", async function() {
     const startBalance = await splitterInstance.accounts(receiver1);
     // const bobETHStartBalance = new BN(await web3.eth.getBalance(bobAddress));
 
@@ -171,7 +171,7 @@ contract("Splitter features", accounts => {
     assert(endBalance.isZero, "Receiver still had balance on splitter");
   });
 
-  it("...emits LogWithdraw event", async () => {
+  it("...emits LogWithdraw event", async function() {
     await splitterInstance.split(receiver1, receiver2, {
       from: sender,
       value: toWei("0.1", "ether")
