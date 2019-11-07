@@ -8,7 +8,7 @@ contract Splitter is Pausable{
 
   mapping(address => uint) public accounts;
 
-  event LogSplit(address indexed senderAddress, uint value, address receiver1, address receiver2);
+  event LogSplit(address indexed senderAddress, uint value, address indexed receiver1, address indexed receiver2);
   event LogWithdraw(address indexed withdrawalAddress, uint value);
 
   constructor () public {
