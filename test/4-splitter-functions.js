@@ -133,7 +133,7 @@ contract("Splitter features", accounts => {
       value: toWei("0.1", "ether")
     });
 
-    let txobj = await splitterInstance.withdraw({
+    const txobj = await splitterInstance.withdraw({
       from: bobAddress
     });
 
@@ -161,7 +161,7 @@ contract("Splitter features", accounts => {
       value: toWei("0.1", "ether")
     });
 
-    let txobj = await splitterInstance.withdraw({
+    const txobj = await splitterInstance.withdraw({
       from: carolAddress
     });
 
@@ -226,7 +226,7 @@ contract("Splitter features", accounts => {
   });
 
   it("...emits LogSplit event", async () => {
-    txObj = await splitterInstance.split({
+    const txObj = await splitterInstance.split({
       from: aliceAddress,
       value: toWei("0.1", "ether")
     });
@@ -244,7 +244,7 @@ contract("Splitter features", accounts => {
       value: toWei("0.1", "ether")
     });
 
-    txObj = await splitterInstance.withdraw({
+    const txObj = await splitterInstance.withdraw({
       from: carolAddress
     });
 
@@ -256,7 +256,7 @@ contract("Splitter features", accounts => {
   });
 
   it("...emits LogChangeAddress event", async () => {
-    txObj = await splitterInstance.changeBobAddress(newAddress, {
+    const txObj = await splitterInstance.changeBobAddress(newAddress, {
       from: bobAddress
     });
 
