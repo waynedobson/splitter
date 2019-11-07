@@ -103,7 +103,7 @@ contract("Splitter features", accounts => {
 
     assert.strictEqual(
       txObj.receipt.logs[0].args[1].toString(),
-      new BN(toWei("0.1", "ether")).toString(),
+      toWei("0.1", "ether"),
       "LogWithdraw emitted with incorrect amount"
     );
 
