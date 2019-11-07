@@ -90,7 +90,13 @@ contract("Splitter features", accounts => {
     });
 
     assert.strictEqual(
-      txObj.receipt.logs[0].args[0],
+      txObj.receipt.logs.length,
+      1,
+      "There should be one event emitted"
+    );
+
+    assert.strictEqual(
+      txObj.receipt.logs[0].args["0"],
       sender,
       "LogWithdraw emitted with incorrect sender address"
     );
