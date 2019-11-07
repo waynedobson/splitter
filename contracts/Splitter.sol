@@ -34,13 +34,11 @@ contract Splitter is Pausable{
   }
 
   function withdraw() public whenNotPaused{
-
-    uint value = accounts[msg.sender];
-    require(value > 0, 'Cannot withdraw zero');
-
-    accounts[msg.sender] = 0;
-    emit LogWithdraw(msg.sender, value);
-
-    msg.sender.transfer(value);
+      uint balance = accounts[msg.sender];
+      require(balance > 0, 'Cannot withdraw zero');
+      accounts[msg.sender] = 0;
+      emit LogWithdraw(msg.sender, balance);
+      (bool success,) = msg.sender.call.value(balance)("");
+      require(success, "Withdrawal failed.");
   }
 }
