@@ -1,9 +1,9 @@
 const Splitter = artifacts.require("./Splitter.sol");
 
-let splitterInstance;
-let splitterAddress;
-
 contract("Splitter features", accounts => {
+  let splitterInstance;
+  let splitterAddress;
+
   const invalidChecksumAddress = "0x31fC3D52f842E70deA4F990e4CfcAFa4045C991C"; //Invalid Address with capital C (should be lower case)
 
   const [creator, sender, receiver1, receiver2] = accounts;
