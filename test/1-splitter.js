@@ -81,8 +81,6 @@ contract("Splitter features", accounts => {
     }
   });
 
-  // event LogSplit(address indexed senderAddress, uint value, address receiver1, address receiver2);
-
   it("...emits LogSplit event", async function() {
     const txObj = await splitterInstance.split(receiver1, receiver2, {
       from: sender,
