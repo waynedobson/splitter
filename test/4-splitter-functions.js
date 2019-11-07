@@ -147,12 +147,15 @@ contract("Splitter features", accounts => {
     });
 
     const txobj = await splitterInstance.withdraw({
-      from: bobAddress
+      from: bobAddress,
+      gasPrice: 50
     });
 
+    const tx = await web3.eth.getTransaction(txobj.tx);
+    const gasPrice = web3.utils.toBN(tx.gasPrice);
+
     const gasUsed = new BN(txobj.receipt.gasUsed);
-    const gasPrice = new BN(await web3.eth.getGasPrice());
-    const allowedGas = new BN(gasPrice).mul(gasUsed);
+    const allowedGas = gasPrice.mul(gasUsed);
 
     const endBalance = new BN(await web3.eth.getBalance(bobAddress));
 
@@ -175,12 +178,15 @@ contract("Splitter features", accounts => {
     });
 
     const txobj = await splitterInstance.withdraw({
-      from: carolAddress
+      from: carolAddress,
+      gasPrice: 50
     });
 
+    const tx = await web3.eth.getTransaction(txobj.tx);
+    const gasPrice = web3.utils.toBN(tx.gasPrice);
+
     const gasUsed = new BN(txobj.receipt.gasUsed);
-    const gasPrice = new BN(await web3.eth.getGasPrice());
-    const allowedGas = new BN(gasPrice).mul(gasUsed);
+    const allowedGas = gasPrice.mul(gasUsed);
 
     const endBalance = new BN(await web3.eth.getBalance(carolAddress));
 
@@ -247,9 +253,6 @@ contract("Splitter features", accounts => {
     const txObj = await splitterInstance.withdraw({
       from: carolAddress
     });
-
-    console.log(txObj.receipt.logs[0].args[0]);
-    console.log(txObj.receipt.logs[0].args[1].toString());
 
     assert.strictEqual(
       txObj.receipt.logs[0].args[0],
