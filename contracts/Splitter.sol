@@ -55,19 +55,24 @@ contract Splitter is Pausable{
   }
 
   function withdraw() public whenNotPaused{
-    require(msg.sender == aliceAddress || msg.sender == bobAddress || msg.sender == carolAddress, "Only Alice, Bob or Carol can withdraw");
 
-    if (msg.sender == aliceAddress) {
+    address _aliceAddress = aliceAddress; //memory variable as declared in function
+    address _bobAddress = bobAddress;   //memory variable as declared in function
+    address _carolAddress = carolAddress; //memory variable as declared in function
+
+    require(msg.sender == _aliceAddress || msg.sender == _bobAddress || msg.sender == _carolAddress, "Only Alice, Bob or Carol can withdraw");
+
+    if (msg.sender == _aliceAddress) {
       uint value = aliceBalance;
       aliceBalance = 0;
       emit LogWithdraw(msg.sender,value);
       msg.sender.transfer(value);
-    } else if (msg.sender == bobAddress) {
+    } else if (msg.sender == _bobAddress) {
       uint value = bobBalance;
       bobBalance = 0;
       emit LogWithdraw(msg.sender,value);
       msg.sender.transfer(value);
-    } else if (msg.sender == carolAddress) {
+    } else if (msg.sender == _carolAddress) {
       uint value = carolBalance;
       carolBalance = 0;
       emit LogWithdraw(msg.sender,value);
