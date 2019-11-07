@@ -100,6 +100,12 @@ contract("Splitter features", accounts => {
     );
 
     assert.strictEqual(
+      txObj.receipt.logs[0].args.senderAddress,
+      sender,
+      "LogWithdraw emitted with incorrect sender address"
+    );
+
+    assert.strictEqual(
       txObj.receipt.logs[0].args[1].toString(),
       toWei("0.1", "ether"),
       "LogWithdraw emitted with incorrect amount"
