@@ -132,15 +132,15 @@ contract("Splitter features", accounts => {
       value: toWei("0.1", "ether")
     });
 
-    const txobj = await splitterInstance.withdraw({
+    const txObj = await splitterInstance.withdraw({
       from: receiver1,
       gasPrice: 50
     });
 
-    const tx = await web3.eth.getTransaction(txobj.tx);
+    const tx = await web3.eth.getTransaction(txObj.tx);
     const gasPrice = new BN(tx.gasPrice);
 
-    const gasUsed = new BN(txobj.receipt.gasUsed);
+    const gasUsed = new BN(txObj.receipt.gasUsed);
     const allowedGas = gasPrice.mul(gasUsed);
 
     const endBalance = new BN(await web3.eth.getBalance(receiver1));
