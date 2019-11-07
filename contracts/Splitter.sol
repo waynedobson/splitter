@@ -24,7 +24,9 @@ contract Splitter is Pausable{
     require(msg.sender != receiver1 && msg.sender != receiver2, 'Sender cannot be one of receivers'); // subject to spec (assumption made here)
 
     uint value = msg.value.div(2);
-    accounts[msg.sender] = accounts[msg.sender].add(msg.value.mod(2)); // catch odd amounts
+    if (accounts[msg.sender].add(msg.value.mod(2)) == 1) {
+      accounts[msg.sender] = accounts[msg.sender].add(msg.value.mod(2)); // catch odd amounts
+    }
     accounts[receiver1] = accounts[receiver1].add(value);
     accounts[receiver2] = accounts[receiver2].add(value);
 
