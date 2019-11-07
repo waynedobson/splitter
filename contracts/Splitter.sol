@@ -6,89 +6,39 @@ import "./lifecycle/Pausable.sol";
 contract Splitter is Pausable{
   using SafeMath for uint256;
 
-  address public aliceAddress;
-  address public bobAddress;
-  address public carolAddress;
+  mapping(address => uint) public accounts;
 
-//consider using mapping if more than 2
-  uint public aliceBalance;
-  uint public bobBalance;
-  uint public carolBalance;
+  event LogSplit(address indexed senderAddress, uint value, address receiver1, address receiver2);
+  event LogWithdraw(address indexed withdrawalAddress, uint value);
 
-  event LogSplit(address indexed aliceCurrentAddress, uint value);
-  event LogWithdraw(address indexed withdranToAddress, uint value);
-  event LogChangeAddress(address indexed formAddress, address indexed toAddress);
-
-  modifier rejectInvalidAddresses(address _addressToChange, address _newAddress) {
-    require(msg.sender == _addressToChange, "Cannot change to same address.");
-    require(aliceAddress != _newAddress, "Cannot change to Alices address.");
-    require(bobAddress != _newAddress, "Cannot change to Bobs address.");
-    require(carolAddress != _newAddress, "Cannot change to Carols Address.");
-    require(address(0x0) != _newAddress, "Cannot change to 0x0 Address.");
-    require(address(this) != _newAddress, "Cannot change to Contract Address.");
-    emit LogChangeAddress(msg.sender, _newAddress);
-    _;
-  }
-
-  constructor (address _aliceAddress, address _bobAddress, address _carolAddress) public {
-    require(address(0x0) != _aliceAddress, "Alice address cannot be set to 0x0.");
-    require(address(0x0) != _bobAddress, "Bob address cannot be set to 0x0.");
-    require(address(0x0) != _carolAddress, "Carol address cannot be set to 0x0.");
-    aliceAddress = _aliceAddress;
-    bobAddress = _bobAddress;
-    carolAddress = _carolAddress;
+  constructor () public {
   }
 
   function () external {
     revert("No fallback function");
   }
 
-  function split() public payable whenNotPaused{
+  function split(address receiver1, address receiver2) public payable whenNotPaused{
     require (msg.value > 0, "No ETH was sent to split");
-    require (msg.sender == aliceAddress, "Only Alice can send");
+    require(receiver1 != address(0) && receiver2 != address(0), '0x is not valid Receiver');
+    require(msg.sender != receiver1 && msg.sender != receiver2, 'Sender cannot be one of receivers'); // subject to spec (assumption made here)
 
-    bobBalance = bobBalance.add(msg.value.div(2));
-    carolBalance = carolBalance.add(msg.value.div(2));
-    aliceBalance = aliceBalance.add(msg.value.mod(2));
+    uint value = msg.value.div(2);
+    accounts[msg.sender] = accounts[msg.sender].add(msg.value.mod(2)); // catch odd amounts
+    accounts[receiver1] = accounts[receiver1].add(value);
+    accounts[receiver2] = accounts[receiver2].add(value);
 
-    emit LogSplit(msg.sender, msg.value);
+    emit LogSplit(msg.sender, msg.value, receiver1, receiver2);
   }
 
   function withdraw() public whenNotPaused{
 
-    address _aliceAddress = aliceAddress; //memory variable as declared in function
-    address _bobAddress = bobAddress;     //memory variable as declared in function
-    address _carolAddress = carolAddress; //memory variable as declared in function
+    uint value = accounts[msg.sender];
+    require(value > 0, 'Cannot withdraw zero');
 
-    require(msg.sender == _aliceAddress || msg.sender == _bobAddress || msg.sender == _carolAddress, "Only Alice, Bob or Carol can withdraw");
+    accounts[msg.sender] = 0;
+    emit LogWithdraw(msg.sender, value);
 
-    if (msg.sender == _aliceAddress) {
-      uint value = aliceBalance;
-      aliceBalance = 0;
-      emit LogWithdraw(msg.sender,value);
-      msg.sender.transfer(value);
-    } else if (msg.sender == _bobAddress) {
-      uint value = bobBalance;
-      bobBalance = 0;
-      emit LogWithdraw(msg.sender,value);
-      msg.sender.transfer(value);
-    } else if (msg.sender == _carolAddress) {
-      uint value = carolBalance;
-      carolBalance = 0;
-      emit LogWithdraw(msg.sender,value);
-      msg.sender.transfer(value);
-    }
-  }
-
-  function changeAliceAddress(address _newAddress) public whenNotPaused rejectInvalidAddresses (aliceAddress, _newAddress){
-    aliceAddress = _newAddress;
-  }
-
-  function changeBobAddress(address _newAddress) public whenNotPaused rejectInvalidAddresses (bobAddress, _newAddress){
-    bobAddress = _newAddress;
-  }
-
-  function changeCarolAddress(address _newAddress) public whenNotPaused rejectInvalidAddresses (carolAddress, _newAddress){
-    carolAddress = _newAddress;
+    msg.sender.transfer(value);
   }
 }
