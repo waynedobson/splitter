@@ -14,6 +14,8 @@ contract("Splitter features", accounts => {
     newAddress //used to test change of address
   ] = accounts;
 
+  const { BN, toWei } = web3.utils;
+
   beforeEach("create instance", async () => {
     splitterInstance = await Splitter.new(
       aliceAddress,
@@ -38,7 +40,7 @@ contract("Splitter features", accounts => {
       await web3.eth.sendTransaction({
         from: aliceAddress,
         to: splitterAddress,
-        value: web3.utils.toWei("0.1", "ether")
+        value: toWei("0.1", "ether")
       });
 
       assert.fail("Allowed fallback call");
@@ -58,7 +60,7 @@ contract("Splitter features", accounts => {
     const endBalance = await splitterInstance.aliceBalance();
 
     assert(
-      startBalance.add(new web3.utils.BN(1)).eq(endBalance),
+      startBalance.add(new BN(1)).eq(endBalance),
       "Alice not given the odd amount"
     );
   });
@@ -72,8 +74,8 @@ contract("Splitter features", accounts => {
     const bobBalance = await splitterInstance.bobBalance();
     const carolBalance = await splitterInstance.carolBalance();
 
-    assert.notEqual(bobBalance, new web3.utils.BN(5));
-    assert.notEqual(carolBalance, new web3.utils.BN(5));
+    assert.notEqual(bobBalance, new BN(5));
+    assert.notEqual(carolBalance, new BN(5));
   });
 
   it("...rejects zero send from Alice", async () => {
@@ -123,29 +125,27 @@ contract("Splitter features", accounts => {
   });
 
   it("...allows Bob to withdraw 0.05 ETH (Allowing for Gas)", async () => {
-    const startBalance = new web3.utils.BN(
-      await web3.eth.getBalance(bobAddress)
-    );
+    const startBalance = new BN(await web3.eth.getBalance(bobAddress));
 
     await splitterInstance.split({
       from: aliceAddress,
-      value: web3.utils.toWei("0.1", "ether")
+      value: toWei("0.1", "ether")
     });
 
     let txobj = await splitterInstance.withdraw({
       from: bobAddress
     });
 
-    const gasUsed = new web3.utils.BN(txobj.receipt.gasUsed);
-    const gasPrice = new web3.utils.BN(await web3.eth.getGasPrice());
-    const allowedGas = new web3.utils.BN(gasPrice).mul(gasUsed);
+    const gasUsed = new BN(txobj.receipt.gasUsed);
+    const gasPrice = new BN(await web3.eth.getGasPrice());
+    const allowedGas = new BN(gasPrice).mul(gasUsed);
 
-    const endBalance = new web3.utils.BN(await web3.eth.getBalance(bobAddress));
+    const endBalance = new BN(await web3.eth.getBalance(bobAddress));
 
     assert.strictEqual(
       endBalance.toString(10),
       startBalance
-        .add(new web3.utils.BN(web3.utils.toWei("0.05", "ether")))
+        .add(new BN(toWei("0.05", "ether")))
         .sub(allowedGas)
         .toString(10),
       "Bob did not get enough ETH form the 0.05 ETH"
@@ -153,31 +153,27 @@ contract("Splitter features", accounts => {
   });
 
   it("...allows Carol to withdraw 0.05 ETH (Allowing for Gas)", async () => {
-    const startBalance = new web3.utils.BN(
-      await web3.eth.getBalance(carolAddress)
-    );
+    const startBalance = new BN(await web3.eth.getBalance(carolAddress));
 
     await splitterInstance.split({
       from: aliceAddress,
-      value: web3.utils.toWei("0.1", "ether")
+      value: toWei("0.1", "ether")
     });
 
     let txobj = await splitterInstance.withdraw({
       from: carolAddress
     });
 
-    const gasUsed = new web3.utils.BN(txobj.receipt.gasUsed);
-    const gasPrice = new web3.utils.BN(await web3.eth.getGasPrice());
-    const allowedGas = new web3.utils.BN(gasPrice).mul(gasUsed);
+    const gasUsed = new BN(txobj.receipt.gasUsed);
+    const gasPrice = new BN(await web3.eth.getGasPrice());
+    const allowedGas = new BN(gasPrice).mul(gasUsed);
 
-    const endBalance = new web3.utils.BN(
-      await web3.eth.getBalance(carolAddress)
-    );
+    const endBalance = new BN(await web3.eth.getBalance(carolAddress));
 
     assert.strictEqual(
       endBalance.toString(10),
       startBalance
-        .add(new web3.utils.BN(web3.utils.toWei("0.05", "ether")))
+        .add(new BN(toWei("0.05", "ether")))
         .sub(allowedGas)
         .toString(10),
       "Carol did not get enough ETH form the 0.05 ETH"
@@ -186,19 +182,15 @@ contract("Splitter features", accounts => {
 
   it("...allows Bob to withdraw 0.05 ETH and then checks that 0 is left", async () => {
     const bobStartBalance = await splitterInstance.bobBalance();
-    const bobETHStartBalance = new web3.utils.BN(
-      await web3.eth.getBalance(bobAddress)
-    );
+    const bobETHStartBalance = new BN(await web3.eth.getBalance(bobAddress));
 
     await splitterInstance.split({
       from: aliceAddress,
-      value: web3.utils.toWei("0.1", "ether")
+      value: toWei("0.1", "ether")
     });
 
     const bobMidBalance = await splitterInstance.bobBalance();
-    const bobETHMidbalance = new web3.utils.BN(
-      await web3.eth.getBalance(bobAddress)
-    );
+    const bobETHMidbalance = new BN(await web3.eth.getBalance(bobAddress));
 
     await splitterInstance.withdraw({
       from: bobAddress
@@ -211,19 +203,17 @@ contract("Splitter features", accounts => {
 
   it("...allows Carol to withdraw 0.05 ETH and then checks that 0 is left", async () => {
     const carolStartBalance = await splitterInstance.carolBalance();
-    const carolETHStartBalance = new web3.utils.BN(
+    const carolETHStartBalance = new BN(
       await web3.eth.getBalance(carolAddress)
     );
 
     await splitterInstance.split({
       from: aliceAddress,
-      value: web3.utils.toWei("0.1", "ether")
+      value: toWei("0.1", "ether")
     });
 
     const carolMidBalance = await splitterInstance.carolBalance();
-    const carolETHMidbalance = new web3.utils.BN(
-      await web3.eth.getBalance(carolAddress)
-    );
+    const carolETHMidbalance = new BN(await web3.eth.getBalance(carolAddress));
 
     await splitterInstance.withdraw({
       from: carolAddress
@@ -237,7 +227,7 @@ contract("Splitter features", accounts => {
   it("...emits LogSplit event", async () => {
     txObj = await splitterInstance.split({
       from: aliceAddress,
-      value: web3.utils.toWei("0.1", "ether")
+      value: toWei("0.1", "ether")
     });
 
     assert.strictEqual(
@@ -250,7 +240,7 @@ contract("Splitter features", accounts => {
   it("...emits LogWithdraw event", async () => {
     await splitterInstance.split({
       from: aliceAddress,
-      value: web3.utils.toWei("0.1", "ether")
+      value: toWei("0.1", "ether")
     });
 
     txObj = await splitterInstance.withdraw({
