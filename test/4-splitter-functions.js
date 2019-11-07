@@ -132,11 +132,11 @@ contract("Splitter features", accounts => {
       value: web3.utils.toWei("0.1", "ether")
     });
 
-    let trans = await splitterInstance.withdraw({
+    let txobj = await splitterInstance.withdraw({
       from: bobAddress
     });
 
-    const gasUsed = new web3.utils.BN(trans.receipt.gasUsed);
+    const gasUsed = new web3.utils.BN(txobj.receipt.gasUsed);
     const gasPrice = new web3.utils.BN(await web3.eth.getGasPrice());
     const allowedGas = new web3.utils.BN(gasPrice).mul(gasUsed);
 
@@ -165,11 +165,11 @@ contract("Splitter features", accounts => {
       value: web3.utils.toWei("0.1", "ether")
     });
 
-    let trans = await splitterInstance.withdraw({
+    let txobj = await splitterInstance.withdraw({
       from: carolAddress
     });
 
-    const gasUsed = new web3.utils.BN(trans.receipt.gasUsed);
+    const gasUsed = new web3.utils.BN(txobj.receipt.gasUsed);
     const gasPrice = new web3.utils.BN(await web3.eth.getGasPrice());
     const allowedGas = new web3.utils.BN(gasPrice).mul(gasUsed);
 
