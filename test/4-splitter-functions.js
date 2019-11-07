@@ -92,6 +92,19 @@ contract("Splitter features", accounts => {
     }
   });
 
+  it("...emits LogSplit event", async () => {
+    const txObj = await splitterInstance.split({
+      from: aliceAddress,
+      value: toWei("0.1", "ether")
+    });
+
+    assert.strictEqual(
+      txObj.receipt.logs[0].event,
+      "LogSplit",
+      "LogSplit not emitted"
+    );
+  });
+
   it("...rejects if Alice is not the sender", async () => {
     try {
       await splitterInstance.split({
@@ -223,19 +236,6 @@ contract("Splitter features", accounts => {
     const carolEndBalance = await splitterInstance.carolBalance();
 
     assert(carolEndBalance.isZero, "carol still had balance on splitter");
-  });
-
-  it("...emits LogSplit event", async () => {
-    const txObj = await splitterInstance.split({
-      from: aliceAddress,
-      value: toWei("0.1", "ether")
-    });
-
-    assert.strictEqual(
-      txObj.receipt.logs[0].event,
-      "LogSplit",
-      "LogSplit not emitted"
-    );
   });
 
   it("...emits LogWithdraw event", async () => {
