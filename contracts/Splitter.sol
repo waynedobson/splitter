@@ -25,7 +25,7 @@ contract Splitter is Pausable{
 
     uint value = msg.value.div(2);
     if (msg.value.mod(2) == 1) {// catch odd value
-      accounts[msg.sender] = accounts[msg.sender] + 1;
+      accounts[msg.sender] = accounts[msg.sender].add(1);
     }
     accounts[receiver1] = accounts[receiver1].add(value);
     accounts[receiver2] = accounts[receiver2].add(value);
