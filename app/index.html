@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Splitter - Demo</title>
+  </head>
+
+  <body>
+    <h1>Splitter — Demo</h1>
+    <div>
+      <p>
+        Address:
+        <input type="text" size="60" id="ethAddress" placeholder="address" />
+        <button onclick="App.refreshBalance()">Refresh Balances</button>
+        <button onclick="App.setAccount(1)">Set account 1</button>
+        <button onclick="App.setAccount(2)">Set account 2</button>
+        <button onclick="App.setAccount(3)">Set account 3</button> (for ease of
+        testing)
+      </p>
+      <p>Blockchain Balance <strong id="ethBalance">...</strong> Ether</p>
+      <p>
+        Splitter Balanace <strong id="splitterBalance">...</strong> Ether
+        <button onclick="App.withdrawFunds()">Withdraw</button> <br />
+      </p>
+    </div>
+    <hr />
+
+    <div>
+      <h3>Split</h3>
+      <label for="amount">Amount in Eth:</label>
+      <input type="text" size="60" id="amount" placeholder="amount" />
+
+      <label for="receiver1">to address 1:</label>
+      <input type="text" size="60" id="receiver1" placeholder="address" />
+
+      <label for="receiver2">to address 2:</label>
+      <input type="text" size="60" id="receiver2" placeholder="address" />
+
+      <button onclick="App.split()">Split</button>
+    </div>
+    <hr />
+    <script src="js/app.js"></script>
+  </body>
+</html>
