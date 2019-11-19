@@ -1,7 +1,6 @@
 import Web3 from "web3";
 import $ from "jquery";
 import splitterJson from "../../build/contracts/Splitter.json";
-import "file-loader?name=../index.html!../index.html";
 
 window.App = {
   start: async function() {
