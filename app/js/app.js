@@ -50,51 +50,47 @@ window.App = {
     const receiver2 = $("#receiver2").val();
     const sender = $("#ethAddress").val();
 
-    try {
-      await this.deployed
-        .split(receiver1, receiver2, {
-          from: sender,
-          value: amount
-        })
-        .on("transactionHash", txHash => {
-          alert(
-            "Transaction pending, you can use this hash to look it up: " +
-              txHash
-          );
-        })
-        .on("confirmation", async (confNumber, receipt) => {
-          if (confNumber == 1) {
-            alert("Your deposit has been confirmed on the blockchain!");
-          }
-          this.refreshBalance();
-        });
-    } catch (error) {
-      alert(error);
-    }
+    await this.deployed
+      .split(receiver1, receiver2, {
+        from: sender,
+        value: amount
+      })
+      .on("transactionHash", txHash => {
+        alert(
+          "Transaction pending, you can use this hash to look it up: " + txHash
+        );
+      })
+      .on("confirmation", async (confNumber, receipt) => {
+        if (confNumber == 1) {
+          alert("Your deposit has been confirmed on the blockchain!");
+        }
+        this.refreshBalance();
+      })
+      .on("error", async err => {
+        alert(err);
+      });
   },
   withdrawFunds: async function() {
-    try {
-      const address = $("#ethAddress").val();
+    const address = $("#ethAddress").val();
 
-      await this.deployed
-        .withdraw({
-          from: address
-        })
-        .on("transactionHash", txHash => {
-          alert(
-            "Transaction pending, you can use this hash to look it up: " +
-              txHash
-          );
-        })
-        .on("confirmation", async (confNumber, receipt) => {
-          if (confNumber == 1) {
-            alert("Your withdrawal has been confirmed on the blockchain!");
-          }
-          this.refreshBalance();
-        });
-    } catch (error) {
-      alert(error);
-    }
+    await this.deployed
+      .withdraw({
+        from: address
+      })
+      .on("transactionHash", txHash => {
+        alert(
+          "Transaction pending, you can use this hash to look it up: " + txHash
+        );
+      })
+      .on("confirmation", async (confNumber, receipt) => {
+        if (confNumber == 1) {
+          alert("Your withdrawal has been confirmed on the blockchain!");
+        }
+        this.refreshBalance();
+      })
+      .on("error", async err => {
+        alert(err);
+      });
   }
 };
 
