@@ -19,10 +19,10 @@ window.App = {
       alert(error);
     }
   },
-  setAccount: async function(account) {
+  setAccount: async function(selectedAccount) {
     const accounts = await this.web3.eth.getAccounts();
 
-    $("#ethAddress").val(accounts[account].toString());
+    $("#ethAddress").val(accounts[selectedAccount].toString());
     App.refreshBalance();
   },
   refreshBalance: async function() {
