@@ -1,19 +1,20 @@
 import Web3 from "web3";
 import $ from "jquery";
 import splitterJson from "../../build/contracts/Splitter.json";
+import truffleContract from "truffle-contract";
 
 window.App = {
   start: async function() {
-    let splitterInstance;
+    let deployed;
 
     try {
       const networkId = await this.web3.eth.net.getId();
       const deployedNetwork = splitterJson.networks[networkId];
+      const Splitter = truffleContract(splitterJson);
 
-      this.splitterInstance = new this.web3.eth.Contract(
-        splitterJson.abi,
-        deployedNetwork.address
-      );
+      Splitter.setProvider(App.web3.currentProvider);
+
+      this.deployed = await Splitter.deployed();
     } catch (error) {
       alert(error);
     }
@@ -28,7 +29,7 @@ window.App = {
     const address = $("#ethAddress").val();
 
     const splitterBalance = this.web3.utils.fromWei(
-      await this.splitterInstance.methods.accounts(address).call(),
+      await this.deployed.accounts(address),
       "ether"
     );
 
@@ -50,9 +51,8 @@ window.App = {
     const sender = $("#ethAddress").val();
 
     try {
-      await this.splitterInstance.methods
-        .split(receiver1, receiver2)
-        .send({
+      await this.deployed
+        .split(receiver1, receiver2, {
           from: sender,
           value: amount
         })
@@ -76,9 +76,8 @@ window.App = {
     try {
       const address = $("#ethAddress").val();
 
-      await this.splitterInstance.methods
-        .withdraw()
-        .send({
+      await this.deployed
+        .withdraw({
           from: address
         })
         .on("transactionHash", txHash => {
